@@ -6,13 +6,20 @@
     <title>Rock-Paper-Scissor Game</title>
   </head>
   <body>
-    <label for="buttons">Choose your pick :</label>
-    <input id="buttons" type="button" class="human rock" value="Rock" />
-    <input type="button" id="buttons" class="human paper" value="Paper" />
-    <input type="button" id="buttons" class="human scissor" value="Scissor" />
+    <p>Choose your pick :</p>
+    <div id="container">
+      <input type="button" class="human rock" value="Rock" />
+      <input type="button" class="human paper" value="Paper" />
+      <input type="button" class="human scissor" value="Scissor" />
+    </div>
+
+    <h3 id="h3"></h3>
 
     <p id="round"></p>
 
     <p id="game"></p>
+
+    <input type="button" value="restart" id="restart" />
+    <script src="rps.js"></script>
   </body>
 </html>

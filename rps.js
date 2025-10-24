@@ -1,35 +1,32 @@
-function getHumanChoice() {
-  const humanPick = prompt('Pick either "rock" or "paper" or "scissor"');
-  return humanPick;
-}
+const container = document.querySelector("#container");
+
+const h3 = document.querySelector("#h3");
+
+const paraRound = document.querySelector("#round");
+
+const paraGame = document.querySelector("#game");
+
+const restartBtn = document.querySelector("#restart");
+
+let computerWin = 0;
+let humanWin = 0;
+let draw = 0;
+let gameOver = false;
+let round = 0;
 
 function random(max) {
-  const randomNum = Math.floor(Math.random() * max) + 1;
-  return randomNum;
+  return Math.floor(Math.random() * max);
 }
 
 function getComputerChoice() {
-  const num = random(3);
-  switch (num) {
-    case 1:
-      return "rock";
-      break;
-
-    case 2:
-      return "paper";
-      break;
-
-    case 3:
-      return "scissor";
-      break;
-  }
+  const choices = ["rock", "paper", "scissor"];
+  return choices[random(3)];
 }
-let humanWin = 0;
-let computerWin = 0;
-let draw = 0;
 
 function playRound(humanChoice, computerChoice) {
-  console.log(`Human : ${humanChoice}, Computer : ${computerChoice}.`);
+  if (gameOver) return;
+  round++;
+  h3.textContent = `Round ${round}!!`;
 
   if (
     (humanChoice === "rock" && computerChoice === "scissor") ||
@@ -37,35 +34,51 @@ function playRound(humanChoice, computerChoice) {
     (humanChoice === "scissor" && computerChoice === "paper")
   ) {
     humanWin++;
-    console.log("human wins this round");
-  } else if (
-    (humanChoice === "rock" && computerChoice === "paper") ||
-    (humanChoice === "paper" && computerChoice === "scissor") ||
-    (humanChoice === "scissor" && computerChoice === "rock")
-  ) {
-    computerWin++;
-    console.log("computer wins this round");
-  } else if (
-    (humanChoice === "rock" && computerChoice === "rock") ||
-    (humanChoice === "paper" && computerChoice === "paper") ||
-    (humanChoice === "scissor" && computerChoice === "scissor")
-  ) {
+    paraRound.textContent = `HUMAN WINS Round ${round} ,
+    Pick  | Human :${humanChoice}  Computer : ${computerChoice}`;
+  } else if (humanChoice === computerChoice) {
     draw++;
-    console.log("this round is tied");
+    paraRound.textContent = `Round ${round} TIED ,
+    Pick  | Human :${humanChoice}  Computer : ${computerChoice}`;
+  } else {
+    computerWin++;
+    paraRound.textContent = `COMPUTER WINS Round ${round} ,
+    Pick  | Human :${humanChoice}  Computer : ${computerChoice}`;
+  }
+
+  checkWinner();
+}
+
+function checkWinner() {
+  paraGame.textContent = `Score : You ${humanWin} - ${computerWin} Computer | Draw ${draw}`;
+  if (humanWin === 5 || computerWin === 5) {
+    gameOver = true;
+
+    if (humanWin === 5) {
+      paraGame.textContent += `HUMAN WINS The GAME`;
+    }
+    if (computerWin === 5) {
+      paraGame.textContent += `COMPUTER WINS The GAME`;
+    }
+    h3.textContent = "GAME OVER";
   }
 }
 
-function playGame() {
-  for (let i = 0; i < 5; i++) {
-    playRound(getHumanChoice(), getComputerChoice());
-  }
-  if (humanWin > computerWin) {
-    console.log(`Human wins by score ${humanWin}-${computerWin}.`);
-  }
-  if (humanWin < computerWin) {
-    console.log(`Computer wins by score ${computerWin}-${humanWin}.`);
-  }
-  if (humanWin === computerWin) {
-    console.log(`Game tied. Score: ${humanWin}-${computerWin}.`);
-  }
-}
+container.addEventListener("click", (e) => {
+  if (!e.target.value || gameOver) return;
+  const humanPick = e.target.value.toLowerCase();
+
+  playRound(humanPick, getComputerChoice());
+});
+
+restartBtn.addEventListener("click", () => {
+  humanWin = 0;
+  computerWin = 0;
+  draw = 0;
+  round = 0;
+  gameOver = false;
+
+  paraRound.textContent = "";
+  paraGame.textContent = "";
+  h3.textContent = "New Game Starts !!";
+});
